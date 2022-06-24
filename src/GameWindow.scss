@@ -1,0 +1,78 @@
+@mixin on-circle($item-count, $circle-size, $item-size) {
+  position: relative;
+  width:  $circle-size;
+  height: $circle-size;
+  padding: 0;
+  border-radius: 50%;
+  list-style: none;
+
+  > .circleItem {
+    display: block;
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    width:  $item-size;
+    height: $item-size;
+    margin: -($item-size / 2);
+
+    $angle: (360 / $item-count);
+    $rot: 0;
+
+    @for $i from 1 through $item-count {
+      &:nth-of-type(#{$i}) {
+        transform:
+                rotate($rot * 1deg)
+                translate($circle-size / 2)
+                rotate($rot * -1deg);
+      }
+      $rot: $rot + $angle;
+    }
+  }
+}
+
+@mixin main-window($item-count) {
+  @include on-circle($item-count: $item-count, $circle-size: 22em, $item-size: 8em);
+  display: inline-flex;
+  align-items: center;
+  margin: 5rem;
+}
+
+@for $i from 1 through 20 {
+  .mainWindow-#{$i} {
+    @include main-window($i)
+  }
+  $angle: (360 / $i);
+  @for $j from 0 through 20 {
+    .centerItem-#{$i}-#{$j}{
+      color: red;
+      position: relative;
+      z-index: 100;
+      $rotAng: ($j * $angle);
+      transform: rotate($rotAng * 1deg);
+    }
+  }
+}
+
+.heartbeat{
+  animation: heartbeat 1s infinite;
+}
+
+
+@keyframes heartbeat {
+  0% {
+    transform: scale( 1 );
+  }
+  20% {
+    transform: scale( 1.25 )
+    //translateX(5%)
+    //translateY(5%);
+  }
+  40% {
+    transform: scale( 1.5 )
+    //translateX(9%)
+    //translateY(10%);
+  }
+}
+
+
+
