@@ -36,20 +36,22 @@ export const GameInput: React.FC<InputWord> = ({
                 onSubmit={handleSubmit}
                 id={'form'}
             >
-                <InputText
-                    id={'user-input'}
-                    value={value}
-                    onChange={nv => {
-                        setValue(nv.currentTarget.value)
-                        ws.send(JSON.stringify({
-                            event: 'typing',
-                            value: nv.currentTarget.value,
-                        }))
-                    }}
-                    disabled={!isCurrent}
-                    autoComplete="off"
-                >
-                </InputText>
+                {isCurrent &&
+                    <InputText
+                        id={'user-input'}
+                        value={value}
+                        onChange={nv => {
+                            setValue(nv.currentTarget.value)
+                            ws.send(JSON.stringify({
+                                event: 'typing',
+                                value: nv.currentTarget.value,
+                            }))
+                        }}
+                        autoComplete="off"
+                        autoFocus
+                    />
+                }
+                {!isCurrent && <InputText disabled />}
             </form>
         </div>
     )
