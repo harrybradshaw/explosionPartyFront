@@ -82,6 +82,7 @@ export const GameWindow: React.FC = () => {
                     ? <GameInput
                         isCurrent={id.current === currentGuesser}
                         isCorrect={guessWasCorrect}
+                        explosionCount={explosionCounter}
                         key={'GameInput'}
                     />
                     : <ReadyButton
