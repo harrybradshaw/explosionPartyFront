@@ -4,10 +4,12 @@ import {GamePrompt} from "./GamePrompt";
 import {LobbyList} from "./LobbyList";
 import {GameInput} from "./GameInput";
 import {useWebsocket} from "./WebSocketContextProvider";
-import {ApiPlayer} from "./models/apiGameState";
+import {ApiGameSettings, ApiPlayer} from "./models/apiGameState";
 import {mapMessageToGameState} from "./websocketUtils";
 import './GameWindow.scss';
 import {ReadyButton} from "./ReadyButton";
+import {Button} from "primereact/button";
+import {SettingsBar} from "./SettingsBar";
 
 export const GameWindow: React.FC = () => {
     const ws = useWebsocket();
@@ -19,6 +21,8 @@ export const GameWindow: React.FC = () => {
     const [playerReady, setPlayerReady] = useState(false);
     const [explosionCounter, setExplosionCounter] = useState(0);
     const [promptOptions, setPromptOptions] = useState([]);
+    const [isSettingsVisible, setIsSettingsVisible] = useState(false);
+    const [gameSettings, setGameSettings] = useState<ApiGameSettings>();
     const id = useRef<string>();
 
     //const currentUser = lobbyMembers.filter(player => player.id === id.current);
@@ -54,49 +58,68 @@ export const GameWindow: React.FC = () => {
         if(json['promptOptions']){
             setPromptOptions(json['promptOptions']);
         }
+        if(json['settings']){
+            setGameSettings(json['settings'])
+        }
     }
 
     return (
-        <div className={"grid"} key={'grid'}>
-            <div className={"col-3"}/>
-
-            <div
-                className={"col justify-content-center flex flex-column align-items-center"}
-                key={'container'}
-            >
-                <GamePrompt
-                    selectedPrompt={gameWord}
-                    promptOptions={promptOptions}
-                    gameIsRunning={gameIsRunning}
-                />
-                <div
-                    className={`mainWindow-${lobbyMembers.length} grid`}
-                >
-                    <LobbyList
-                        members={lobbyMembers}
-                        currentGuesser={currentGuesser}
-                        explosionCounter={explosionCounter}
-                    />
+        <>
+            <div className={"grid mt-2"} key={'grid'}>
+                <div className={"col-3"}>
+                    <Username />
                 </div>
-                {gameIsRunning
-                    ? <GameInput
-                        isCurrent={id.current === currentGuesser}
-                        isCorrect={guessWasCorrect}
-                        explosionCount={explosionCounter}
-                        key={'GameInput'}
-                    />
-                    : <ReadyButton
-                        isReady={playerReady}
-                        lobbyMembers={lobbyMembers}
-                    />
-                }
-            </div>
-            <div
-                className={"col-3"}
-            >
-                <Username />
-            </div>
 
-        </div>
+                <div
+                    className={"col justify-content-center flex flex-column align-items-center"}
+                    key={'container'}
+                >
+                    <GamePrompt
+                        selectedPrompt={gameWord}
+                        promptOptions={promptOptions}
+                        gameIsRunning={gameIsRunning}
+                    />
+                    <div
+                        className={`mainWindow-${lobbyMembers.length} grid`}
+                    >
+                        <LobbyList
+                            members={lobbyMembers}
+                            currentGuesser={currentGuesser}
+                            explosionCounter={explosionCounter}
+                        />
+                    </div>
+                    {gameIsRunning
+                        ? <GameInput
+                            isCurrent={id.current === currentGuesser}
+                            isCorrect={guessWasCorrect}
+                            explosionCount={explosionCounter}
+                            key={'GameInput'}
+                        />
+                        : <ReadyButton
+                            isReady={playerReady}
+                            lobbyMembers={lobbyMembers}
+                            promptIsSet={!gameWord}
+                            playerId={id.current}
+                        />
+                    }
+                </div>
+                <div
+                    className={"col-3"}
+                >
+                    {gameSettings && <Button
+                        onClick={() => setIsSettingsVisible(true)}
+                        label={'Settings'}
+                        disabled={gameIsRunning}
+                    />}
+                </div>
+            </div>
+            {gameSettings &&
+                <SettingsBar
+                    isSettingsVisible={isSettingsVisible}
+                    setIsSettingsVisible={setIsSettingsVisible}
+                    gameSettings={gameSettings}
+                />
+            }
+        </>
     )
 }

@@ -11,3 +11,8 @@ export type ApiPlayer = {
     lives: number,
     lastTyped: string,
 }
+
+export type ApiGameSettings = {
+    defaultTimeout: number,
+    startingLives: number,
+}

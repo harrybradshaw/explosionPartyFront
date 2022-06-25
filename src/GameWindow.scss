@@ -62,15 +62,17 @@
   0% {
     transform: scale( 1 );
   }
+  10% {
+    transform: scale(1.125);
+  }
   20% {
     transform: scale( 1.25 )
-    //translateX(5%)
-    //translateY(5%);
+  }
+  30% {
+    transform: scale(1.375);
   }
   40% {
     transform: scale( 1.5 )
-    //translateX(9%)
-    //translateY(10%);
   }
 }
 
