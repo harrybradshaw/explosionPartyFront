@@ -1,7 +1,7 @@
 import React, {createContext, useContext} from "react";
 
-//const ws = new WebSocket('wss://explosion-party-backend.herokuapp.com/lobby');
-const ws = new WebSocket('ws://localhost:5001/lobby');
+const ws = new WebSocket('wss://explosion-party-backend.herokuapp.com/lobby');
+//const ws = new WebSocket('ws://localhost:5001/lobby');
 const SocketContext = createContext(ws);
 
 interface WebSocketContextProps {
