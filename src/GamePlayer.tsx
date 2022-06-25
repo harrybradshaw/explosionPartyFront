@@ -24,7 +24,7 @@ export const GamePlayer: React.FC<PlayerProps> = ({
                     )}
                 </div>
                 <div>
-                    {player.lives == 0
+                    {player.lives === 0
                         ? <s> {player.lastTyped} </s>
                         : player.lastTyped
                     }

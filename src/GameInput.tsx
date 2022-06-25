@@ -1,16 +1,17 @@
-import React, {FormEvent, useState} from "react";
+import React, {FormEvent, useEffect, useState} from "react";
 import {useWebsocket} from "./WebSocketContextProvider";
 import {InputText} from "primereact/inputtext";
 import './GameInput.scss';
-import classNames from "classnames";
 
 interface InputWord {
     isCurrent: boolean,
     isCorrect: boolean,
+    explosionCount: number,
 }
 
 export const GameInput: React.FC<InputWord> = ({
     isCurrent,
+    explosionCount,
 }) => {
     const [value, setValue] = useState<string>('');
     const ws = useWebsocket();
@@ -22,6 +23,12 @@ export const GameInput: React.FC<InputWord> = ({
         }))
         setValue('');
     }
+
+    useEffect(() => {
+        if (explosionCount){
+            setValue('');
+        }
+    },[explosionCount])
 
     return (
         <div>
@@ -40,7 +47,7 @@ export const GameInput: React.FC<InputWord> = ({
                         }))
                     }}
                     disabled={!isCurrent}
-                    className={classNames()}
+                    autoComplete="off"
                 >
                 </InputText>
             </form>
